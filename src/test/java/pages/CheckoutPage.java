@@ -1,7 +1,8 @@
-package Pages;
+package pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 
 public class CheckoutPage extends BasePage {
@@ -13,25 +14,39 @@ public class CheckoutPage extends BasePage {
     private static final By ITEM_QUANTITY = By.cssSelector(".cart_item");
     private static final By FINISH_BUTTON = By.cssSelector(".btn_action");
     private static final By CONFIRMATION_HEADER = By.className("complete-header");
-
     private static final String URL = "https://www.saucedemo.com/checkout-step-one.html";
+    private static final By CHECKOUT_INFO = By.className("checkout_info");
 
     public CheckoutPage(WebDriver driver) {
         super(driver);
     }
 
-    public void openPage() {
+    @Override
+    public CheckoutPage openPage() {
         driver.get(URL);
+        isPageOpened();
+        return this;
     }
 
-
-    public void submitForm(String firstName, String lastName, String postalCode) {
-        driver.findElement(FIRST_NAME).sendKeys(firstName);
-        driver.findElement(LAST_NAME).sendKeys(lastName);
-        driver.findElement(ZIP_CODE).sendKeys(postalCode);
+    @Override
+    public CheckoutPage isPageOpened() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(CHECKOUT_INFO));
+        return this;
     }
 
-    public void continueButton() {
+    public void submitForm(String firstName, String lastName, String zipCode) {
+        if (!firstName.equals("")) {
+            driver.findElement(FIRST_NAME).sendKeys(firstName);
+        }
+        if (!lastName.equals("")) {
+            driver.findElement(LAST_NAME).sendKeys(lastName);
+        }
+        if (!zipCode.equals("")) {
+            driver.findElement(ZIP_CODE).sendKeys(zipCode);
+        }
+    }
+
+    public void clickContinueButton() {
         driver.findElement(CONTINUE_BUTTON).click();
     }
 
@@ -39,15 +54,16 @@ public class CheckoutPage extends BasePage {
         Assert.assertTrue(driver.findElement(CHECKOUT_OVERVIEW).isDisplayed());
     }
 
-    public void itemQuantity(int number) {
+    public void validationItemQuantity(int number) {
         Assert.assertEquals(driver.findElements(ITEM_QUANTITY).size(), number,
-                "Quantity of items isn't correct");
+                "Quantity is invalid");
     }
 
-    public void finishButton() {
+    public void clickFinishButton() {
         driver.findElement(FINISH_BUTTON).click();
     }
-    public void confirmationHeader() {
+
+    public void validationConfirmationHeader() {
         Assert.assertTrue(driver.findElement(CONFIRMATION_HEADER).isDisplayed());
     }
 }

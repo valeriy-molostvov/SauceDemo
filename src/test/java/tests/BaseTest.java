@@ -1,9 +1,7 @@
 package tests;
 
-import Pages.CartPage;
-import Pages.CheckoutPage;
-import Pages.LoginPage;
-import Pages.ProductsPage;
+import models.User;
+import pages.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterMethod;
@@ -14,9 +12,11 @@ import java.util.concurrent.TimeUnit;
 public class BaseTest {
     private WebDriver driver;
     LoginPage loginPage;
+    LoginPageFactory loginPageFactory;
     ProductsPage productsPage;
     CartPage cartPage;
     CheckoutPage checkoutPage;
+    User user = new User ("standard_user", "secret_sauce");
 
     @BeforeMethod
     public void setUp() {
@@ -27,8 +27,8 @@ public class BaseTest {
         productsPage = new ProductsPage(driver);
         cartPage = new CartPage(driver);
         checkoutPage = new CheckoutPage(driver);
+        loginPageFactory = new LoginPageFactory(driver);
     }
-
 
     @AfterMethod(alwaysRun = true)
     public void closeBrowser() {

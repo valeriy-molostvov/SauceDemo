@@ -1,9 +1,9 @@
 package tests;
 
+import models.User;
 import org.testng.annotations.Test;
 
 public class SauceDemoTest extends BaseTest {
-
     @Test
     public void loginTest() {
         loginPage.openPage();
@@ -14,11 +14,11 @@ public class SauceDemoTest extends BaseTest {
         cartPage.validateProductDetails("Sauce Labs Fleece Jacket", 1, 49.99);
         checkoutPage.openPage();
         checkoutPage.submitForm("A", "B", "1");
-        checkoutPage.continueButton();
+        checkoutPage.clickContinueButton();
         checkoutPage.checkoutOverview();
-        checkoutPage.itemQuantity(1);
-        checkoutPage.finishButton();
-        checkoutPage.confirmationHeader();
+        checkoutPage.validationItemQuantity(1);
+        checkoutPage.clickFinishButton();
+        checkoutPage.validationConfirmationHeader();
     }
 
     @Test
@@ -26,5 +26,16 @@ public class SauceDemoTest extends BaseTest {
         loginPage.openPage();
         loginPage.login("standard_user", "secret_sauce");
         productsPage.openPage();
+    }
+
+    @Test
+    public void loginPageTest() {
+        loginPageFactory
+                .openPage()
+                .login(user)
+                .addToCart("Sauce Labs Fleece Jacket")
+                .addToCart("Sauce Labs Bike Light")
+                .clickCart()
+                .validateNumberOfProducts(2);
     }
 }
